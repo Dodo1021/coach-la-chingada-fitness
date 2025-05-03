@@ -1,6 +1,10 @@
+import os
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+ASSISTANT_ID = os.environ.get("ASSISTANT_ID")
+
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from openai import OpenAI
-import os
 from database import init_db, get_user, create_user, create_conversation, save_message, get_user_conversations, get_conversation_messages, delete_conversation, update_password, delete_user, get_or_create_user_conversation
 
 app = Flask(__name__)
@@ -12,10 +16,6 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Inicializar la base de datos
 init_db()
-
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-SECRET_KEY = os.environ.get("SECRET_KEY")
-ASSISTANT_ID = os.environ.get("ASSISTANT_ID")
 
 @app.before_request
 def require_login():
