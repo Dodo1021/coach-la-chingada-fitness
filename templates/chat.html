@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat con el Coach - La Chingada Fitness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #211e1f;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .banner {
+            background-color: #211e1f;
+            padding: 1rem;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff0404, transparent);
+        }
+
+        .logo {
+            max-width: 120px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255, 4, 4, 0.3));
+            display: block;
+            margin: 0 auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            color: #ff0404;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            height: calc(100vh - 80px);
+        }
+
+        .conversations-panel {
+            width: 300px;
+            background-color: rgba(33, 30, 31, 0.95);
+            border-right: 2px solid #ff0404;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 80px;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .conversations-panel h2 {
+            color: #ff0404;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-menu:hover {
+            color: #ff0404;
+        }
+
+        .conversation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background-color: rgba(33, 30, 31, 0.8);
+            border-radius: 10px;
+            border: 1px solid #ff0404;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .conversation-item:hover {
+            background-color: rgba(255, 4, 4, 0.2);
+            transform: translateX(5px);
+        }
+
+        .conversation-item.active {
+            background-color: rgba(255, 4, 4, 0.3);
+            border-left: 4px solid #ff0404;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(33, 30, 31, 0.8);
+            margin-left: 300px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .chat-header {
+            padding: 1.5rem;
+            background-color: rgba(255, 4, 4, 0.1);
+            border-bottom: 2px solid #ff0404;
+        }
+
+        .chat-header h2 {
+            color: #ff0404;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem;
+            border-radius: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: rgba(255, 4, 4, 0.2);
+            border: 1px solid #ff0404;
+        }
+
+        .assistant-message {
+            align-self: flex-start;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-input {
+            padding: 1.5rem;
+            background-color: rgba(255, 4, 4, 0.1);
+            border-top: 2px solid #ff0404;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px #ff0404;
+        }
+
+        .chat-input button {
+            padding: 1rem 2rem;
+            background-color: #ff0404;
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 4, 4, 0.3);
+        }
+
+        .chat-input button:hover {
+            background-color: transparent;
+            color: #ff0404;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 4, 4, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .conversations-panel {
+                transform: translateX(-100%);
+                width: 100%;
+            }
+
+            .conversations-panel.active {
+                transform: translateX(0);
+            }
+
+            .conversations-panel h2 {
+                padding-right: 1rem;
+            }
+
+            .close-menu {
+                display: block;
+            }
+
+            .chat-area {
+                margin-left: 0;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .logo {
+                max-width: 80px;
+            }
+
+            .user-menu {
+                right: 1rem;
+            }
+        }
+
+        /* Estilos para la barra de desplazamiento */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(33, 30, 31, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff0404;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 4, 4, 0.8);
+        }
+
+        .user-menu {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1100;
+        }
+
+        .user-menu-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu-btn:hover {
+            background-color: rgba(255, 4, 4, 0.1);
+        }
+
+        .username {
+            font-weight: bold;
+        }
+
+        .menu-icon {
+            font-size: 0.8rem;
+        }
+
+        .user-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: rgba(33, 30, 31, 0.95);
+            border: 2px solid #ff0404;
+            border-radius: 10px;
+            padding: 1rem;
+            display: none;
+            min-width: 200px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .user-menu-dropdown.show {
+            display: block;
+        }
+
+        .menu-item {
+            display: block;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 4, 4, 0.1);
+            color: #ff0404;
+        }
+
+        .delete-btn {
+            background-color: transparent;
+            color: #ff0404;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(255, 4, 4, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <img src="/static/images/4dFIIeM.jpeg" alt="La Chingada Fitness Logo" class="logo">
+        <div class="user-menu">
+            <button class="user-menu-btn" id="userMenuBtn">
+                <span class="username">{{ session.get('username', 'Usuario') }}</span>
+                <i class="menu-icon">▼</i>
+            </button>
+            <div class="user-menu-dropdown" id="userMenuDropdown">
+                <a href="#" class="menu-item" onclick="showChangePasswordModal()">Cambiar Contraseña</a>
+                <a href="#" class="menu-item" onclick="showDeleteAccountModal()">Eliminar Cuenta</a>
+                <a href="/logout" class="menu-item">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-area" style="margin-left:0;">
+            <div class="chat-header">
+                <h2>Chat con el Coach</h2>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <form class="chat-input" id="chat-form">
+                <input type="text" id="user-input" placeholder="Escribe tu mensaje..." required>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+    <script src="../static/js/chat.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Menú de usuario
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userMenuDropdown = document.getElementById('userMenuDropdown');
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userMenuDropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', (e) => {
+                if (!userMenuBtn.contains(e.target) && !userMenuDropdown.contains(e.target)) {
+                    userMenuDropdown.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

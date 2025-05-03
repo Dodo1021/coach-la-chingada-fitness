@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - La Chingada Fitness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #211e1f;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .banner {
+            background-color: #211e1f;
+            padding: 1rem;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff0404, transparent);
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255, 4, 4, 0.3));
+        }
+
+        .register-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .register-box {
+            background-color: rgba(33, 30, 31, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #ff0404;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-box h1 {
+            color: #ff0404;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px #ff0404;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: #ff0404;
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 4, 4, 0.3);
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: #ff0404;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 4, 4, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #ffffff;
+        }
+
+        .login-link a {
+            color: #ff0404;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff0404;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 1rem;
+            }
+
+            .register-box {
+                padding: 1.5rem;
+            }
+
+            .register-box h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <img src="/static/images/4dFIIeM.jpeg" alt="La Chingada Fitness Logo" class="logo">
+    </div>
+
+    <div class="register-container">
+        <div class="register-box">
+            <h1>Registro</h1>
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
+            <form method="POST" action="/register">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="Crea tu usuario" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Crea tu contraseña" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirmar Contraseña</label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirma tu contraseña" required>
+                </div>
+                <button type="submit" class="btn">Registrarse</button>
+            </form>
+            <div class="login-link">
+                ¿Ya tienes una cuenta? <a href="/login">Inicia Sesión</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

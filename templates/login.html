@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - La Chingada Fitness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #211e1f;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .banner {
+            background-color: #211e1f;
+            padding: 1rem;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff0404, transparent);
+        }
+
+        .logo {
+            max-width: 120px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255, 4, 4, 0.3));
+            display: block;
+            margin: 0 auto;
+        }
+
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background-color: rgba(33, 30, 31, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #ff0404;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-box h1 {
+            color: #ff0404;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px #ff0404;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: #ff0404;
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 4, 4, 0.3);
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: #ff0404;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 4, 4, 0.4);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #ffffff;
+        }
+
+        .register-link a {
+            color: #ff0404;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff0404;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 1rem;
+            }
+
+            .login-box {
+                padding: 1.5rem;
+            }
+
+            .login-box h1 {
+                font-size: 1.8rem;
+            }
+
+            .logo {
+                max-width: 80px;
+            }
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            margin: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <img src="/static/images/4dFIIeM.jpeg" alt="La Chingada Fitness Logo" class="logo">
+    </div>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h1>Iniciar Sesión</h1>
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="Ingresa tu usuario" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                </div>
+                <div class="form-group remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Mantener sesión iniciada</label>
+                </div>
+                <button type="submit" class="btn">Iniciar Sesión</button>
+            </form>
+            <div class="register-link">
+                ¿No tienes una cuenta? <a href="/register">Regístrate</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
